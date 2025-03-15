@@ -55,4 +55,9 @@ public class JobLinkServiceImpl
 		
 		return "Job  Updated Successfully.";	
 	}
+    
+    public JobLink findById(int id) {
+        return jobLinkRepository.findById(id).orElse(null);
+    }
+
 }

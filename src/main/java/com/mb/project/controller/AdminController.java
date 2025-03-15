@@ -88,40 +88,42 @@ public class AdminController
 	}
     
     @GetMapping("updatejob")
-	public ModelAndView updatejob()
-	{
-		ModelAndView mv=new ModelAndView();
-		mv.setViewName("updatejob");
-		return mv;
-	}
-	
-	@PostMapping("update")
-    public ModelAndView update(HttpServletRequest request)
-    {
-		int jid =Integer.parseInt(request.getParameter("jid"));
-		String companyname=request.getParameter("comna");
-    	String jobdes=request.getParameter("jobdes");
-    	String applicationLink = request.getParameter("applink");
-    	LocalDateTime closingDateTime = LocalDateTime.parse(request.getParameter("closingdt"));
-    	
+    public ModelAndView updatejob(@RequestParam(value = "id", required = false) Integer jid) {
+        ModelAndView mv = new ModelAndView("updatejob");
         
-        
+        if (jid != null) {
+            JobLink job = jobLinkService.findById(jid);
+            if (job != null) {
+                mv.addObject("job", job);
+            } else {
+                mv.addObject("error", "Job ID not found");
+            }
+        }
+        return mv;
+    }
+
+    @PostMapping("update")
+    public ModelAndView update(HttpServletRequest request) {
+        int jid = Integer.parseInt(request.getParameter("jid"));
+        String companyname = request.getParameter("comna");
+        String jobdes = request.getParameter("jobdes");
+        String applicationLink = request.getParameter("applink");
+        LocalDateTime closingDateTime = LocalDateTime.parse(request.getParameter("closingdt"));
+
         JobLink jobLink = new JobLink();
-        
         jobLink.setId(jid);
         jobLink.setCompanyName(companyname);
         jobLink.setJobDescription(jobdes);
         jobLink.setApplicationLink(applicationLink);
         jobLink.setClosingDateTime(closingDateTime);
         jobLink.setStatus(Status.OPEN);
-       
-       String msg = jobLinkService.updatejob(jobLink);
-       
-       ModelAndView mv = new ModelAndView("updatesuccess");
-       mv.addObject("message", msg);
-     
-       return mv;
 
+        String msg = jobLinkService.updatejob(jobLink);
+
+        ModelAndView mv = new ModelAndView("updatejobsuccess");
+        mv.addObject("message", msg);
+        return mv;
     }
+
 	
 }

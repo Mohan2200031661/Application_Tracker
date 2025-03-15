@@ -1,6 +1,7 @@
 <%@page import="com.mb.project.model.JobLink"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
 <%
@@ -88,15 +89,16 @@ a:hover {
 </head>
 <body>
 	<jsp:include page="adminnavbar.jsp" />
-	<br/>
+	<br />
 	<div class="container">
 		<h2>Job Listings</h2>
 		<input type="text" id="searchBox" onkeyup="searchJobs()"
 			placeholder="Search by Company Name or Job ID...">
 
 		<h3 align="center">
-			<span class="count-box">Total Count: <c:out value="${count}" /></span>
+			<span class="count-box">Total Count: ${count}</span>
 		</h3>
+
 		<table id="jobTable">
 			<thead>
 				<tr>
