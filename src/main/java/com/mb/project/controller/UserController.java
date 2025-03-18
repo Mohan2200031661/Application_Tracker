@@ -13,8 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mb.project.model.JobLink;
 import com.mb.project.model.User;
 import com.mb.project.service.JobLinkServiceImpl;
+import com.mb.project.service.SendEmailService;
 import com.mb.project.service.UserService;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +28,9 @@ public class UserController {
 
 	@Autowired
 	private JobLinkServiceImpl jobLinkServiceImpl;
+	
+	@Autowired
+	private SendEmailService emailService;
 	
 
 	@GetMapping("/")
@@ -42,27 +47,65 @@ public class UserController {
 		return mv;
 	}
 
-	@PostMapping("insertuser")
-	public ModelAndView insertemp(HttpServletRequest request) {
-		String uid = request.getParameter("uid");
-		String name = request.getParameter("uname");
-		String password = request.getParameter("password");
+	 @PostMapping("insertuser")
+	    public ModelAndView insertUser(HttpServletRequest request) {
+	        String uid = request.getParameter("uid");
+	        String name = request.getParameter("uname");
+	        String email = uid + "@kluniversity.in";
 
-		User us = new User();
-		us.setId(uid);
-		us.setName(name);
-		us.setPassword(password);
-		us.setEmail(uid + "@kluniversity.in");
-		us.setUserType(User.UserType.USER);
+	        // Get current host dynamically
+	        String host = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-		String msg = userService.addUser(us);
+	        // Generate a verification link based on the current host
+	        String verificationLink = host + "/setpassword?uid=" + uid + "&uname=" + name;
 
-		ModelAndView mv = new ModelAndView("regsuccess");
-		mv.addObject("message", msg);
+	        // Email content
+	        String subject = "User Registration - Set Your Password";
+	        String content = "<p>Hello <b>" + name + "</b>,</p>"
+	                        + "<p>Click the link below to set your password:</p>"
+	                        + "<p><a href='" + verificationLink + "'>Set Password</a></p>"
+	                        + "<p>Thank you.</p>";
 
-		return mv;
-	}
+	        try {
+	            emailService.sendFormattedEmail(email, subject, content);
+	        } catch (MessagingException e) {
+	            e.printStackTrace();
+	            return new ModelAndView("emailfail", "message", "Failed to send email.");
+	        }
 
+	        return new ModelAndView("emailsent", "message", "A verification email has been sent to " + email);
+	    }
+
+	    @GetMapping("setpassword")
+	    public ModelAndView showSetPasswordPage(HttpServletRequest request) {
+	        String uid = request.getParameter("uid");
+	        String uname = request.getParameter("uname");
+
+	        ModelAndView mv = new ModelAndView("setpassword");
+	        mv.addObject("uid", uid);
+	        mv.addObject("uname", uname);
+	        return mv;
+	    }
+
+	 @PostMapping("setpassword")
+	 public ModelAndView setPassword(HttpServletRequest request) {
+	        String uid = request.getParameter("uid");
+	        String name = request.getParameter("uname");
+	        String password = request.getParameter("password");
+
+	        User us = new User();
+	        us.setId(uid);
+	        us.setName(name);
+	        us.setPassword(password);
+	        us.setEmail(uid + "@kluniversity.in");
+	        us.setUserType(User.UserType.USER);
+
+	        userService.addUser(us);
+
+	        return new ModelAndView("regsuccess", "message", "Registration successful!");
+	        
+	 }
+	        
 	@GetMapping("regsuccess")
 	public ModelAndView regsuccess() {
 		ModelAndView mv = new ModelAndView();

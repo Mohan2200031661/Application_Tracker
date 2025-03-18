@@ -16,9 +16,6 @@
         <label for="uname">Name:</label>
         <input type="text" id="uname" name="uname" required>
         
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        
         <button type="submit" class="submit-btn">Submit</button>
         <button type="reset" class="clear-btn">Clear</button>
     </form>
