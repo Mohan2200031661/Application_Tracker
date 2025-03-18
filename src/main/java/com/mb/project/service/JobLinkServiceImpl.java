@@ -4,6 +4,8 @@ import com.mb.project.model.JobLink;
 import com.mb.project.model.JobLink.Status;
 import com.mb.project.repository.JobLinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -58,6 +60,19 @@ public class JobLinkServiceImpl
     
     public JobLink findById(int id) {
         return jobLinkRepository.findById(id).orElse(null);
+    }
+    
+    @Scheduled(fixedRate = 60000)
+    public void updateJobStatus() {
+        List<JobLink> jobLinks = jobLinkRepository.findAll();
+        LocalDateTime now = LocalDateTime.now();
+
+        for (JobLink job : jobLinks) {
+            if (job.getClosingDateTime().isBefore(now) && job.getStatus() == JobLink.Status.OPEN) {
+                job.setStatus(JobLink.Status.CLOSED);
+                jobLinkRepository.save(job);
+            }
+        }
     }
 
 }

@@ -31,7 +31,7 @@ public class UserController {
 	@GetMapping("/")
 	public ModelAndView start() {
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("start");
+		mv.setViewName("login");
 		return mv;
 	}
 
@@ -83,7 +83,7 @@ public class UserController {
 			session.setAttribute("u", u);
 
 			if (u.getUserType() == User.UserType.ADMIN) {
-				mv.setViewName("adminhome"); // Redirect to admin home
+				mv.setViewName("redirect:adminhome"); // Redirect to admin home
 			} else {
 				mv.setViewName("userhome");
 			}

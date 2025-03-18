@@ -7,17 +7,6 @@
     <!-- Include external stylesheet for the navbar -->
     <jsp:include page="adminnavbar.jsp" />
     <style>
-        /* Global styles */
-       /*  body {
-            font-family: 'Poppins', sans-serif;
-            background: #f4f6f9;
-            margin: auto;
-            padding: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        } */
-
         h2 {
             color: #343a40;
             margin-bottom: 20px;
@@ -67,21 +56,52 @@
             background: #0056b3;
         }
 
-       
+        .error-message {
+            color: red;
+            font-size: 14px;
+            display: none;
+            margin-top: -8px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h2 class="form-title">Add Job Application</h2>
-        <form action="insertjoblink" method="post">
+        <form id="jobForm" action="insertjoblink" method="post">
             <input type="text" name="comna" placeholder="Company Name" required>
             <textarea name="jobdes" placeholder="Job Description" required></textarea>
             <input type="url" name="applink" placeholder="Application Link" required>
-            <input type="datetime-local" name="closingdt" required>
+            <input type="datetime-local" name="closingdt" id="closingdt" required>
+            <p class="error-message" id="dateError">Closing date must be in the future.</p>
             <button type="submit">Add Job</button>
         </form>
     </div>
 
+    <script>
+        function setMinDateTime() {
+            let now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // Adjust for timezone
+            document.getElementById("closingdt").min = now.toISOString().slice(0, 16);
+        }
+
+        function validateDate(event) {
+            let closingDate = new Date(document.getElementById("closingdt").value);
+            let currentDate = new Date();
+            
+            if (closingDate <= currentDate) {
+                document.getElementById("dateError").style.display = "block";
+                event.preventDefault(); // Prevent form submission
+            } else {
+                document.getElementById("dateError").style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", setMinDateTime);
+        document.getElementById("jobForm").addEventListener("submit", validateDate);
+    </script>
+
 </body>
 </html>
+ 

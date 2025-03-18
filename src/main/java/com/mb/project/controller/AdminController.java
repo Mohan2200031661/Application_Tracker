@@ -21,6 +21,10 @@ public class AdminController
 {
 	@Autowired
     private JobLinkServiceImpl jobLinkService;
+	
+	public AdminController(JobLinkServiceImpl jobLinkService) {
+        this.jobLinkService = jobLinkService;
+    }
 
     @GetMapping("addjob")
     public ModelAndView addjob()
@@ -56,17 +60,13 @@ public class AdminController
     
     
     @GetMapping("viewjobs")
-	public ModelAndView viewjobs() 
-	{
-	    ModelAndView mv = new ModelAndView();
-	    List<JobLink> jl = jobLinkService.viewalljoblinks();
-	    mv.setViewName("viewjobs");
-	    mv.addObject("jl", jl);
-	    
-	    long count =jobLinkService.jobcount();
-		mv.addObject("count", count);
-	    return mv;
-	}
+    public ModelAndView viewJobs() {
+        ModelAndView mv = new ModelAndView("viewjobs");
+        List<JobLink> jl = jobLinkService.viewalljoblinks();
+        mv.addObject("jl", jl);
+        mv.addObject("count", jobLinkService.jobcount());
+        return mv;
+    }
     
     @GetMapping("deletejob")
 	public ModelAndView deletejob() 
