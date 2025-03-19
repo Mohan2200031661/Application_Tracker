@@ -75,8 +75,11 @@
             font-size: clamp(2rem, 5vw, 3.5rem);
             margin-bottom: 1.5rem;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-            color: white;
+            color: red;
         }
+        
+        .
+        
 
         .hero-section p {
             font-size: clamp(1rem, 3vw, 1.5rem);
@@ -166,6 +169,10 @@
             transform: translateY(-2px);
             border-color: #fff;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .warning{
+        	color: red;
         }
 
         /* Menu Icon */
@@ -273,76 +280,29 @@
     </style>
 </head>
 <body>
+    <!-- Navbar Section -->
+    <div class="navbar">
+        <div class="logo">
+            <a href="/">
+                <img src="images/logo.png" alt="Logo">
+                Placement Tracker
+            </a>
+        </div>
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    </div>
 
-<div class="login-container">
-    <h2>Set Your Password</h2>
-    <form action="setpassword" method="post">
-        <input type="hidden" name="uid" value="${uid}">
-        <input type="hidden" name="uname" value="${uname}">
-        <input type="hidden" name="keyid" value="${keyid}">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1>Existing User Found !</h1>
+        <h2>please try below ways......</h2>
         
-        <label>Password:</label>
-        <input type="password" id="password" name="password" required onkeyup="validatePassword()">
-        <span id="passwordError" class="error"></span>
+        <div class="cta-buttons">
+               <h3> Check by logging in again!</h3><a href="login?page=login">Click Here</a>
+        </div>
+        <div class="cta-buttons">
+               <h3> Try Resetting Password </h3><a href="resetpassword">Forgot Password</a>
+        </div>
         
-        <label>Confirm Password:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" required onkeyup="checkPasswordMatch()">
-        <span id="confirmError" class="error"></span>
-        
-        <label>One Time Password:</label>
-        <input type="text" id="otp" name="otp" required>
-        
-        <button type="submit" id="submitBtn" disabled>Submit</button>
-    </form>
-</div>
-
-<script>
-function validatePassword() {
-    let password = document.getElementById("password").value;
-    let errorMsg = "";
-    let submitBtn = document.getElementById("submitBtn");
-
-    // Password validation rules
-    if (password.length < 8) errorMsg = "Password must be at least 8 characters long.<br>";
-    if (!/[A-Z]/.test(password)) errorMsg += "Must contain at least one uppercase letter.<br>";
-    if (!/[a-z]/.test(password)) errorMsg += "Must contain at least one lowercase letter.<br>";
-    if (!/[0-9]/.test(password)) errorMsg += "Must contain at least one number.<br>";
-    if (!/[!@#$%^&*]/.test(password)) errorMsg += "Must contain at least one special character (!@#$%^&*).<br>";
-
-    document.getElementById("passwordError").innerHTML = errorMsg;
-    checkPasswordMatch();
-}
-
-function checkPasswordMatch() {
-    let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("confirmPassword").value;
-    let confirmError = document.getElementById("confirmError");
-    let submitBtn = document.getElementById("submitBtn");
-
-    if (confirmPassword !== password) {
-        confirmError.innerHTML = "Passwords do not match!";
-        submitBtn.disabled = true;
-        submitBtn.classList.remove("enabled");
-    } else {
-        confirmError.innerHTML = "";
-        enableSubmit();
-    }
-}
-
-function enableSubmit() {
-    let password = document.getElementById("password").value;
-    let passwordError = document.getElementById("passwordError").innerHTML;
-    let submitBtn = document.getElementById("submitBtn");
-
-    if (password.length >= 8 && passwordError === "" && document.getElementById("confirmError").innerHTML === "") {
-        submitBtn.disabled = false;
-        submitBtn.classList.add("enabled");
-    } else {
-        submitBtn.disabled = true;
-        submitBtn.classList.remove("enabled");
-    }
-}
-</script>
-
+	</div>
 </body>
 </html>

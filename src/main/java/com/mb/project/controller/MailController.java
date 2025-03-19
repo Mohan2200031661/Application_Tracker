@@ -18,4 +18,6 @@ public class MailController {
 		ModelAndView mv=new ModelAndView("emailsent");
 		return mv;
 	}
+	
+	
 }

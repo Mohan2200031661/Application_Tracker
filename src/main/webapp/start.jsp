@@ -35,7 +35,6 @@
             top: 0;
             width: 100%;
             transition: all 0.3s ease;
-            z-index: 1000; /* Ensures navbar stays above other content */
         }
 
         /* Rest of your existing styles remain the same until hero-section */
@@ -67,11 +66,12 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 2rem;
+            padding: 5rem;
             background: rgba(0, 0, 0, 0.3);
             }
 
         .hero-section h1 {
+        	padding-top:200px;
             font-size: clamp(2rem, 5vw, 3.5rem);
             margin-bottom: 1.5rem;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
@@ -289,7 +289,6 @@
         <h1>Welcome to Placement Tracker</h1>
         <p>Your one-stop platform for managing job applications and placement opportunities!</p>
         
-        <!-- Login Container -->
         <% 
             String pageType = request.getParameter("page");
             if ("login".equals(pageType)) {
@@ -311,28 +310,22 @@
         <% 
             } else if ("signup".equals(pageType)) { 
         %>
-        <div class="container">
-    <h2>User Registration</h2>
-    <form action="insertuser" method="post">
-        <label for="uid">User ID:</label>
-        <input type="text" id="uid" name="uid" required>
+		<div class="login-container">
+			<h2>User Registration</h2>
+			<form action="insertuser" method="post">
+				<label for="uid">User ID:</label> <input type="text" id="uid"
+					name="uid" placeholder="Enter Your University Id " required>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+				<label for="uname">Name:</label> <input type="text" id="uname"
+					name="uname" required>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <label for="confirm-password">Confirm Password:</label>
-        <input type="password" id="confirm-password" name="confirm-password" required>
-
-        <div class="button-group">
-            <button type="submit" class="submit-btn">Register</button>
-            <button type="reset" class="clear-btn">Clear</button>
-        </div>
-    </form>
-</div> 
-            <div class="cta-buttons">
+				<div class="button-group">
+					<button type="submit" class="submit-btn">Register</button>
+					<button type="reset" class="clear-btn">Clear</button>
+				</div>
+			</form>
+		</div>
+		<div class="cta-buttons">
                 <a href="login?page=login">Already have an account? Login</a>
             </div>
         <% 

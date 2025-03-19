@@ -25,10 +25,18 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAll();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public User viewUserById(String uid) {
-		Optional<User> object = userRepository.findById(uid);
-		return object.get();
+		try {
+			Optional<User> u=userRepository.findById(uid);
+			return u.get();
+		}
+		catch (Exception e) {
+			
+			return null;
+			// TODO: handle exception
+		}
 	}
 
 	@Override
