@@ -275,9 +275,10 @@
 <body>
 
 <div class="login-container">
-    <h2>reset Password</h2>
+    <h2>Reset Your Password</h2>
     <form action="insertpassword" method="post">
         <input type="hidden" name="uid" value="${uid}">
+        <input type="hidden" name="keyid" value="${keyid}">
         
         <label>Password:</label>
         <input type="password" id="password" name="password" required onkeyup="validatePassword()">
@@ -286,6 +287,9 @@
         <label>Confirm Password:</label>
         <input type="password" id="confirmPassword" name="confirmPassword" required onkeyup="checkPasswordMatch()">
         <span id="confirmError" class="error"></span>
+        
+        <label>One Time Password:</label>
+        <input type="text" id="otp" name="otp" required>
         
         <button type="submit" id="submitBtn" disabled>Submit</button>
     </form>

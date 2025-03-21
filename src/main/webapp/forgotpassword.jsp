@@ -66,7 +66,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 5rem;
+            padding: 10rem;
             background: rgba(0, 0, 0, 0.3);
             }
 
@@ -92,7 +92,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 400px;
+            max-width: 600px;
             color: #333;
             margin: 1rem;
         }
@@ -273,75 +273,19 @@
     </style>
 </head>
 <body>
-    <!-- Navbar Section -->
-    <div class="navbar">
-        <div class="logo">
-            <a href="/">
-                <img src="images/logo.png" alt="Logo">
-                Placement Tracker
-            </a>
-        </div>
-        <div class="menu-icon" onclick="toggleMenu()">☰</div>
-    </div>
 
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <h1>Welcome to Placement Tracker</h1>
-        <p>Your one-stop platform for managing job applications and placement opportunities!</p>
+<div class="login-container">
+    <h2>Enter your Id to reset your password</h2>
+    <form action="resetpassword" method="post">
         
-        <% 
-            String pageType = request.getParameter("page");
-            if ("login".equals(pageType)) {
-        %>
-            <div class="login-container">
-                <h2>Login</h2>
-                <form action="checkuserlogin" method="POST">
-                    <input type="text" name="uid" placeholder="Enter ID" required>
-                    <input type="password" name="password" placeholder="Password" required>
-                    <button type="submit">Login</button>
-                </form>
-                <div class="forgot-password">
-                    <a href="forgotpassword">Forgot Password?</a>
-                </div>
-            </div>
-            <div class="cta-buttons">
-                <a href="userregis?page=signup">Don't have an account? Sign Up</a>
-            </div>
-        <% 
-            } else if ("signup".equals(pageType)) { 
-        %>
-		<div class="login-container">
-			<h2>User Registration</h2>
-			<form action="insertuser" method="post">
-				<label for="uid">User ID:</label> <input type="text" id="uid"
-					name="uid" placeholder="Enter Your University Id " required>
+        <label for="uid">User ID:</label>
+        <input type="text" id="uid" name="uid" placeholder="enter your university id nnumber " required>
+       
+        <button type="submit">Submit</button>
+    </form>
+</div>
 
-				<label for="uname">Name:</label> <input type="text" id="uname"
-					name="uname" required>
 
-				<div class="button-group">
-					<button type="submit" class="submit-btn">Register</button>
-					<button type="reset" class="clear-btn">Clear</button>
-				</div>
-			</form>
-		</div>
-		<div class="cta-buttons">
-                <a href="login?page=login">Already have an account? Login</a>
-            </div>
-        <% 
-            } else { 
-        %>
-            <div class="cta-buttons">
-                <a href="userregis?page=signup">Sign Up Now</a>
-                <a href="login?page=login">Login to Your Account</a>
-            </div>
-        <% } %>
-    </div>
 
-    <script>
-        function toggleMenu() {
-            document.querySelector('.navbar').classList.toggle('active');
-        }
-    </script>
 </body>
 </html>

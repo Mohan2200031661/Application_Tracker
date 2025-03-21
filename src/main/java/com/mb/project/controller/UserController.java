@@ -263,56 +263,87 @@ public class UserController {
 		return mv;
 	}
 
-	@GetMapping("resetpassword")
-	public ModelAndView ResetPassword(HttpServletRequest request) {
-		return new ModelAndView("resetpassword");
+	@GetMapping("forgotpassword")
+	public ModelAndView forgotpassword(HttpServletRequest request)
+	{
+		return new ModelAndView("forgotpassword");
 	}
 
 	@PostMapping("resetpassword")
 	public ModelAndView resetMail(HttpServletRequest request) {
 
 		String uid = request.getParameter("uid");
+		String email=uid+"@kluniversity.in";
+
+		int generatedotp = OtpHandler.generateOtp();
 
 		User u = userService.viewUserById(uid);
-		if (u != null) {
+		if (u != null) 
+		{
+			OTP otp = new OTP();
+			otp.setEmail(email);
+			otp.setOtp(generatedotp);
+			otp = otpService.insertOtp(otp);
+
 			// Get current host dynamically
 			String host = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
 			// Generate a verification link based on the current host
-			String verificationLink = host + "/insertpassword?uid=" + uid;
+			String verificationLink = host + "/resetpassword?uid=" + uid + "&keyid=" + otp.getId();
 
 			// Email content
 			String subject = "User Registration - Set Your Password";
-			String content = "<p>Hello <b>" + u.getName() + "</b>,</p>"
-					+ "<p>Click the link below to set your password:</p>" + "<p><a href='" + verificationLink
-					+ "'>Reset Password</a></p>" + "<p>Thank you.</p>";
+			String content = "<p>Hello <b>" + u.getName() + "</b>,</p>" + "<p>Click the link below to reset your password:</p>"
+					+ "<p><a href='" + verificationLink + "'>reset Password</a></p>" + "<p>Generated OTP : <b>"
+					+ otp.getOtp() + "</b></p>" + "<p>Thank you.</p>";
 
 			try {
-				emailService.sendFormattedEmail(u.getEmail(), subject, content);
+				emailService.sendFormattedEmail(email, subject, content);
 			} catch (MessagingException e) {
 				e.printStackTrace();
 				return new ModelAndView("emailfail", "message", "Failed to send email.");
 			}
 
-			return new ModelAndView("emailsent", "message", "A verification email has been sent to " + u.getEmail());
+			return new ModelAndView("emailsent", "message", "A verification email has been sent to " + email);
 		}
 
 		return new ModelAndView("usernotexists");
 
 	}
+	
+	@GetMapping("resetpassword")
+	public ModelAndView resetpassword(HttpServletRequest request) {
+		String uid = request.getParameter("uid");
+		String keyid=request.getParameter("keyid");
+		ModelAndView mv = new ModelAndView("resetpassword");
+		mv.addObject("uid", uid);
+		mv.addObject("keyid",keyid);
+		return mv;
+	}
 
 	@PostMapping("insertpassword")
 	public ModelAndView insertPassword(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		User u = (User) session.getAttribute("u");
 		String uid = request.getParameter("uid");
 		String password = request.getParameter("password");
+		int otp = Integer.parseInt(request.getParameter("otp"));
+		int id = Integer.parseInt(request.getParameter("keyid"));
+		String email = uid + "@kluniversity.in";
 
-		u.setPassword(password);
+		OTP keyotp = otpService.findOne(id);
+		
+		User u = userService.viewUserById(uid);
 
-		userService.updateuser(u);
+		if (keyotp.getOtp() == otp && keyotp.getEmail().equals(email)) {
+			u.setPassword(password);
+			u.setEmail(email);
 
-		return new ModelAndView("update");
+			userService.updateuser(u);
+			otpService.VerifiedOtp(id);
+
+			return new ModelAndView("regsuccess", "message", "Registration successful!");
+		}
+
+		return new ModelAndView("invaliddetails");
 	}
 
 }
